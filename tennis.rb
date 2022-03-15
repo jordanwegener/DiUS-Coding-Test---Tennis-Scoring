@@ -30,6 +30,26 @@ class Match
       @playerTwoPoints = 0
       puts "#{@playerTwo} has won a game!"
     end
+
+    self.checkPlayerWonSet()
+  end
+
+  def checkPlayerWonSet()
+    if @playerOneGames >= 6 && @playerOneGames - @playerTwoGames >= 2
+      puts "#{@playerOne} has won the set!"
+      self.reset()
+    elsif @playerTwoGames >= 6 && @playerTwoGames - @playerOneGames >= 2
+      puts "#{@playerTwo} has won the set!"
+      self.reset()
+    end
+  end
+
+  def reset()
+    @playerOnePoints = 0
+    @playerTwoPoints = 0
+    @playerOneGames = 0
+    @playerTwoGames = 0
+    puts "Score has been reset. 0-0, 0-0."
   end
 
   def score()
