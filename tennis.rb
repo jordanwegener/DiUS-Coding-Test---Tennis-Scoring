@@ -23,39 +23,37 @@ class Match
       @playerOneGames += 1
       @playerOnePoints = 0
       @playerTwoPoints = 0
+      puts "#{@playerOne} has won a game!"
     elsif @playerTwoPoints >= 2 && @playerTwoPoints - @playerOnePoints >= 2
       @playerTwoGames += 1
       @playerOnePoints = 0
       @playerTwoPoints = 0
+      puts "#{@playerTwo} has won a game!"
     end
   end
 
   def score()
 
     # converting points into a score for display
-    
-    case @playerOnePoints
-    when 0
-      playerOneScore = "0"
-    when 1
-      playerOneScore = "15"
-    when 2
-      playerOneScore = "30"
-    when 3
-      playerOneScore = "40"
-    end
 
-    case @playerTwoPoints
-    when 0
-      playerTwoScore = "0"
-    when 1
-      playerTwoScore = "15"
-    when 2
-      playerTwoScore = "30"
-    when 3
-      playerTwoScore = "40"
-    end
+    playerOneScore = self.getFormattedScore(@playerOnePoints)
+    playerTwoScore = self.getFormattedScore(@playerTwoPoints)
 
     puts "#{@playerOneGames}-#{@playerTwoGames}, #{playerOneScore}-#{playerTwoScore}"
+  end
+
+  def getFormattedScore(points)
+    case points
+    when 0
+      return "0"
+    when 1
+      return "15"
+    when 2
+      return "30"
+    when 3
+      return "40"
+    else
+      return "0"
+    end
   end
 end
