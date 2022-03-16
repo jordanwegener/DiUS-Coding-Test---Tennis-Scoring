@@ -14,9 +14,19 @@ class Match
 
   def pointWonByPlayer(player)
     if player == @playerOne
-      @playerOnePoints += 1
+      if @playerOnePoints == 3 && @playerTwoPoints == 4
+        @playerTwoPoints = 3
+      else
+        @playerOnePoints += 1
+      end
+    elsif player == @playerTwo
+      if @playerTwoPoints == 3 && @playerOnePoints == 4
+        @playerOnePoints = 3
+      else
+        @playerTwoPoints += 1
+      end
     else
-      @playerTwoPoints += 1
+      puts "There's no player with that name."
     end
 
     if @playerOnePoints >= 4 && @playerOnePoints - @playerTwoPoints >= 2
@@ -30,6 +40,8 @@ class Match
       @playerTwoPoints = 0
       puts "#{@playerTwo} has won a game!"
     end
+
+    # self.debug()
 
     self.checkPlayerWonSet()
   end
@@ -59,7 +71,11 @@ class Match
     playerOneScore = self.getFormattedScore(@playerOnePoints)
     playerTwoScore = self.getFormattedScore(@playerTwoPoints)
 
-    puts "#{@playerOneGames}-#{@playerTwoGames}, #{playerOneScore}-#{playerTwoScore}"
+    if @playerOnePoints && @playerTwoPoints == 3
+      puts "#{@playerOneGames}-#{@playerTwoGames}, Deuce"
+    else
+      puts "#{@playerOneGames}-#{@playerTwoGames}, #{playerOneScore}-#{playerTwoScore}"
+    end
   end
 
   def getFormattedScore(points)
@@ -72,8 +88,19 @@ class Match
       return "30"
     when 3
       return "40"
+    when 4
+      return "Adv"
     else
       return "0"
     end
+  end
+
+  def debug()
+    puts "playerOne: #{@playerOne}"
+    puts "playerTwo: #{@playerTwo}"
+    puts "playerOnePoints: #{@playerOnePoints}"
+    puts "playerTwoPoints: #{@playerTwoPoints}"
+    puts "playerOneGames: #{@playerOneGames}"
+    puts "playerTwoGames: #{@playerTwoGames}"
   end
 end
