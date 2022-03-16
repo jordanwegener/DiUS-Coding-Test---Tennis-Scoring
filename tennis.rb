@@ -13,7 +13,7 @@ class Match
     puts "Let's play tennis!"
   end
 
-  def pointWonByPlayer(player)
+  def pointWonBy(player)
     if @isTieBreak
       puts "before adding point"
       self.debug()
@@ -74,6 +74,16 @@ class Match
   end
 
   def checkPlayerWonSet()
+    if @isTieBreak
+      if @playerOneGames > 6
+        puts "#{@playerOne} has won the set!"
+        self.reset()
+      elsif @playerTwoGames > 6
+        puts "#{@playerTwo} has won the set!"
+        self.reset()
+      end
+    end
+
     if @playerOneGames >= 6 && @playerOneGames - @playerTwoGames >= 2
       puts "#{@playerOne} has won the set!"
       self.reset()
@@ -82,7 +92,7 @@ class Match
       self.reset()
     end
 
-    if (@playerOneGames == 6 && @playerTwoGames == 5 || @playerTwoGames == 6 && @playerOneGames == 5) && !@isTieBreak
+    if @playerOneGames == 6 && @playerTwoGames == 6 && !@isTieBreak
       puts "Tiebreak set!"
       self.endGame()
       @isTieBreak = true
