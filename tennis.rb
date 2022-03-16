@@ -14,6 +14,30 @@ class Match
   end
 
   def pointWonByPlayer(player)
+    if @isTieBreak
+      puts "before adding point"
+      self.debug()
+      if player == @playerOne
+        @playerOnePoints += 1
+      elsif player == @playerTwo
+        @playerTwoPoints += 1
+      else
+        puts "There's no player with that name."
+      end
+
+      if @playerOnePoints >= 7 && @playerOnePoints - @playerTwoPoints >= 2
+        @playerOneGames += 1
+        self.endGame()
+        puts "#{@playerOne} has won the tiebreak!"
+      elsif @playerTwoPoints >= 7 && @playerTwoPoints - @playerOnePoints >= 2
+        @playerTwoGames += 1
+        self.endGame()
+        puts "#{@playerTwo} has won the tiebreak!"
+      end
+      self.checkPlayerWonSet()
+      self.debug()
+    end
+
     if !@isTieBreak
       puts "before adding point"
       self.debug()
@@ -47,42 +71,20 @@ class Match
       self.debug()
       self.checkPlayerWonSet()
     end
-
-    if @isTieBreak
-      puts "before adding point"
-      self.debug()
-      if player == @playerOne
-        @playerOnePoints += 1
-      elsif player == @playerTwo
-        @playerTwoPoints += 1
-      else
-        puts "There's no player with that name."
-      end
-
-      if @playerOnePoints >= 7 && @playerOnePoints - @playerTwoPoints >= 2
-        @playerOneGames += 1
-        self.endGame()
-        puts "#{@playerOne} has won the tiebreak!"
-      elsif @playerTwoPoints >= 7 && @playerTwoPoints - @playerOnePoints >= 2
-        @playerTwoGames += 1
-        self.endGame()
-        puts "#{@playerTwo} has won the tiebreak!"
-      end
-      self.debug()
-    end
   end
 
   def checkPlayerWonSet()
-    if @playerOneGames == 6 && @playerOneGames - @playerTwoGames >= 2
+    if @playerOneGames >= 6 && @playerOneGames - @playerTwoGames >= 2
       puts "#{@playerOne} has won the set!"
       self.reset()
-    elsif @playerTwoGames == 6 && @playerTwoGames - @playerOneGames >= 2
+    elsif @playerTwoGames >= 6 && @playerTwoGames - @playerOneGames >= 2
       puts "#{@playerTwo} has won the set!"
       self.reset()
     end
 
-    if @playerOneGames == 6 && @playerTwoGames == 5 || @playerTwoGames == 6 && @playerOneGames == 5
+    if (@playerOneGames == 6 && @playerTwoGames == 5 || @playerTwoGames == 6 && @playerOneGames == 5) && !@isTieBreak
       puts "Tiebreak set!"
+      self.endGame()
       @isTieBreak = true
     end
   end
@@ -104,13 +106,13 @@ class Match
 
     # converting points into a score for display
 
-    playerOneScore = self.getFormattedScore(@playerOnePoints)
-    playerTwoScore = self.getFormattedScore(@playerTwoPoints)
+    playerOneScore = @isTieBreak ? @playerOnePoints : self.getFormattedScore(@playerOnePoints)
+    playerTwoScore = @isTieBreak ? @playerTwoPoints : self.getFormattedScore(@playerTwoPoints)
 
-    if @playerOnePoints == 3 && @playerTwoPoints == 3 && !@isTiebreak
-      puts "#{@playerOneGames}-#{@playerTwoGames}, Deuce"
-    else
+    if @playerOnePoints == 3 && @playerTwoPoints == 3 && @isTiebreak
       puts "#{@playerOneGames}-#{@playerTwoGames}, #{playerOneScore}-#{playerTwoScore}"
+    else
+      puts "#{@playerOneGames}-#{@playerTwoGames}, Deuce"
     end
   end
 
