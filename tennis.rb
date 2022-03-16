@@ -77,19 +77,19 @@ class Match
     if @isTieBreak
       if @playerOneGames > 6
         puts "#{@playerOne} has won the set!"
-        self.reset()
+        self.endSet()
       elsif @playerTwoGames > 6
         puts "#{@playerTwo} has won the set!"
-        self.reset()
+        self.endSet()
       end
     end
 
     if @playerOneGames >= 6 && @playerOneGames - @playerTwoGames >= 2
       puts "#{@playerOne} has won the set!"
-      self.reset()
+      self.endSet()
     elsif @playerTwoGames >= 6 && @playerTwoGames - @playerOneGames >= 2
       puts "#{@playerTwo} has won the set!"
-      self.reset()
+      self.endSet()
     end
 
     if @playerOneGames == 6 && @playerTwoGames == 6 && !@isTieBreak
@@ -99,7 +99,7 @@ class Match
     end
   end
 
-  def reset()
+  def endSet()
     @playerOnePoints = 0
     @playerTwoPoints = 0
     @playerOneGames = 0
@@ -119,10 +119,10 @@ class Match
     playerOneScore = @isTieBreak ? @playerOnePoints : self.getFormattedScore(@playerOnePoints)
     playerTwoScore = @isTieBreak ? @playerTwoPoints : self.getFormattedScore(@playerTwoPoints)
 
-    if @playerOnePoints == 3 && @playerTwoPoints == 3 && @isTiebreak
-      puts "#{@playerOneGames}-#{@playerTwoGames}, #{playerOneScore}-#{playerTwoScore}"
-    else
+    if @playerOnePoints == 3 && @playerTwoPoints == 3 && !@isTieBreak
       puts "#{@playerOneGames}-#{@playerTwoGames}, Deuce"
+    else
+      puts "#{@playerOneGames}-#{@playerTwoGames}, #{playerOneScore}-#{playerTwoScore}"
     end
   end
 
