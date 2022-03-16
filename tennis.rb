@@ -15,8 +15,6 @@ class Match
 
   def pointWonBy(player)
     if @isTieBreak
-      puts "before adding point"
-      self.debug()
       if player == @playerOne
         @playerOnePoints += 1
       elsif player == @playerTwo
@@ -35,12 +33,9 @@ class Match
         puts "#{@playerTwo} has won the tiebreak!"
       end
       self.checkPlayerWonSet()
-      self.debug()
     end
 
     if !@isTieBreak
-      puts "before adding point"
-      self.debug()
       if player == @playerOne
         if @playerOnePoints == 3 && @playerTwoPoints == 4
           @playerTwoPoints = 3
@@ -68,7 +63,6 @@ class Match
         puts "#{@playerTwo} has won a game!"
         self.score()
       end
-      self.debug()
       self.checkPlayerWonSet()
     end
   end
