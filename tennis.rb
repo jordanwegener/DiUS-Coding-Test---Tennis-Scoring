@@ -1,5 +1,5 @@
 class Match
-  attr_accessor :playerOne, :playerTwo, :playerOnePoints, :playerTwoPoints, :playerOneGames, :playerTwoGames
+  attr_accessor :playerOne, :playerTwo, :playerOnePoints, :playerTwoPoints, :playerOneGames, :playerTwoGames, :isTieBreak
 
   def initialize(playerOne, playerTwo)
     @playerOne = playerOne
@@ -8,51 +8,82 @@ class Match
     @playerTwoPoints = 0
     @playerOneGames = 0
     @playerTwoGames = 0
+    @isTieBreak = false
     puts "Match created. #{@playerOne} vs #{@playerTwo}, score is #{@playerOnePoints} - #{@playerTwoPoints}."
     puts "Let's play tennis!"
   end
 
   def pointWonByPlayer(player)
-    if player == @playerOne
-      if @playerOnePoints == 3 && @playerTwoPoints == 4
-        @playerTwoPoints = 3
+    if !@isTieBreak
+      puts "before adding point"
+      self.debug()
+      if player == @playerOne
+        if @playerOnePoints == 3 && @playerTwoPoints == 4
+          @playerTwoPoints = 3
+        else
+          @playerOnePoints += 1
+        end
+      elsif player == @playerTwo
+        if @playerTwoPoints == 3 && @playerOnePoints == 4
+          @playerOnePoints = 3
+        else
+          @playerTwoPoints += 1
+        end
       else
+        puts "There's no player with that name."
+      end
+
+      if @playerOnePoints >= 4 && @playerOnePoints - @playerTwoPoints >= 2
+        @playerOneGames += 1
+        self.endGame()
+        puts "#{@playerOne} has won a game!"
+        self.score()
+      elsif @playerTwoPoints >= 4 && @playerTwoPoints - @playerOnePoints >= 2
+        @playerTwoGames += 1
+        self.endGame()
+        puts "#{@playerTwo} has won a game!"
+        self.score()
+      end
+      self.debug()
+      self.checkPlayerWonSet()
+    end
+
+    if @isTieBreak
+      puts "before adding point"
+      self.debug()
+      if player == @playerOne
         @playerOnePoints += 1
-      end
-    elsif player == @playerTwo
-      if @playerTwoPoints == 3 && @playerOnePoints == 4
-        @playerOnePoints = 3
-      else
+      elsif player == @playerTwo
         @playerTwoPoints += 1
+      else
+        puts "There's no player with that name."
       end
-    else
-      puts "There's no player with that name."
+
+      if @playerOnePoints >= 7 && @playerOnePoints - @playerTwoPoints >= 2
+        @playerOneGames += 1
+        self.endGame()
+        puts "#{@playerOne} has won the tiebreak!"
+      elsif @playerTwoPoints >= 7 && @playerTwoPoints - @playerOnePoints >= 2
+        @playerTwoGames += 1
+        self.endGame()
+        puts "#{@playerTwo} has won the tiebreak!"
+      end
+      self.debug()
     end
-
-    if @playerOnePoints >= 4 && @playerOnePoints - @playerTwoPoints >= 2
-      @playerOneGames += 1
-      @playerOnePoints = 0
-      @playerTwoPoints = 0
-      puts "#{@playerOne} has won a game!"
-    elsif @playerTwoPoints >= 2 && @playerTwoPoints - @playerOnePoints >= 2
-      @playerTwoGames += 1
-      @playerOnePoints = 0
-      @playerTwoPoints = 0
-      puts "#{@playerTwo} has won a game!"
-    end
-
-    # self.debug()
-
-    self.checkPlayerWonSet()
   end
 
   def checkPlayerWonSet()
-    if @playerOneGames >= 6 && @playerOneGames - @playerTwoGames >= 2
+    if @playerOneGames == 6 && @playerOneGames - @playerTwoGames >= 2
       puts "#{@playerOne} has won the set!"
       self.reset()
-    elsif @playerTwoGames >= 6 && @playerTwoGames - @playerOneGames >= 2
+    elsif @playerTwoGames == 6 && @playerTwoGames - @playerOneGames >= 2
       puts "#{@playerTwo} has won the set!"
       self.reset()
+    end
+
+    if @playerOneGames == 6 && @playerTwoGames == 5 || @playerTwoGames == 6 && @playerOneGames == 5
+      puts "Tiebreak set!"
+      @isTieBreak = true
     end
   end
 
@@ -64,6 +95,11 @@ class Match
     puts "Score has been reset. 0-0, 0-0."
   end
 
+  def endGame()
+    @playerOnePoints = 0
+    @playerTwoPoints = 0
+  end
+
   def score()
 
     # converting points into a score for display
@@ -71,7 +107,7 @@ class Match
     playerOneScore = self.getFormattedScore(@playerOnePoints)
     playerTwoScore = self.getFormattedScore(@playerTwoPoints)
 
-    if @playerOnePoints && @playerTwoPoints == 3
+    if @playerOnePoints == 3 && @playerTwoPoints == 3 && !@isTiebreak
       puts "#{@playerOneGames}-#{@playerTwoGames}, Deuce"
     else
       puts "#{@playerOneGames}-#{@playerTwoGames}, #{playerOneScore}-#{playerTwoScore}"
@@ -79,19 +115,21 @@ class Match
   end
 
   def getFormattedScore(points)
-    case points
-    when 0
-      return "0"
-    when 1
-      return "15"
-    when 2
-      return "30"
-    when 3
-      return "40"
-    when 4
-      return "Adv"
-    else
-      return "0"
+    if !@isTiebreak
+      case points
+      when 0
+        return "0"
+      when 1
+        return "15"
+      when 2
+        return "30"
+      when 3
+        return "40"
+      when 4
+        return "Adv"
+      else
+        return "0"
+      end
     end
   end
 
@@ -102,5 +140,6 @@ class Match
     puts "playerTwoPoints: #{@playerTwoPoints}"
     puts "playerOneGames: #{@playerOneGames}"
     puts "playerTwoGames: #{@playerTwoGames}"
+    puts "isTieBreak: #{@isTieBreak}"
   end
 end
